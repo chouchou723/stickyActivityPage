@@ -1,19 +1,19 @@
 <template>
     <div class="productShare">
         <!-- <div class="header">
-                <div class="authorLeft">
-                    <img src="../assets/logo.png" alt="" class="headerImg">
-                    <div class="authorTitle">
-                        <div class="headername">下载艺下APP</div>
-                        <div class="headernameT">发现身边的艺术玩伴</div>
+                    <div class="authorLeft">
+                        <img src="../assets/logo.png" alt="" class="headerImg">
+                        <div class="authorTitle">
+                            <div class="headername">下载艺下APP</div>
+                            <div class="headernameT">发现身边的艺术玩伴</div>
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <div class="headerDown" @click="clickDownload">
-                        点击下载
+                    <div>
+                        <div class="headerDown" @click="clickDownload">
+                            点击下载
+                        </div>
                     </div>
-                </div>
-            </div> -->
+                </div> -->
         <headerS></headerS>
         <div style="width:100%;height:1.6rem;background:#F2F2F2"></div>
         <swiper :options="swiperOption" class="swiperOption">
@@ -29,17 +29,17 @@
         </div>
         <div class="author">
             <!-- <div class="productI">
-                    <div class="authorLeft">
-                        <div class="mr2">优惠</div>
-                        <div v-for="(item,index) in promotions" :key="'p'+index" class="promotionList">{{item}}</div>
-                    </div>
-                    <div class="authorRight" @click="clickDownload">
-                        <div class="focus" >
-                            领券
+                        <div class="authorLeft">
+                            <div class="mr2">优惠</div>
+                            <div v-for="(item,index) in promotions" :key="'p'+index" class="promotionList">{{item}}</div>
                         </div>
-                        <i class="right-arrow"></i>
-                    </div>
-                </div> -->
+                        <div class="authorRight" @click="clickDownload">
+                            <div class="focus" >
+                                领券
+                            </div>
+                            <i class="right-arrow"></i>
+                        </div>
+                    </div> -->
             <div class="productI productT" @click="clickDownload">
                 <div class="authorLeft">
                     <div class="mr2">服务</div>
@@ -101,7 +101,7 @@
             <div class="footerLeft">
                 <div class="footerOne" @click="clickDownload">
                     <img src="../assets/customer.png" alt="">
-                    <div>点赞</div>
+                    <div>客服</div>
                 </div>
                 <div class="footerTwo" @click="clickDownload">
                     <img src="../assets/favi.png" alt="">
@@ -291,6 +291,9 @@
 <style scoped>
     .productShare {
         background: #F2F2F2;
+        height: inherit;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
     }
     .articleTitle {
         font-size: 24px;
@@ -356,7 +359,7 @@
     .productName {
         font-size: 16px;
         color: #212121;
-        font-weight: 600;
+        font-weight: bold;
         line-height: 22px;
         margin-bottom: .15rem
     }
@@ -371,12 +374,12 @@
         margin-right: .2rem;
         font-size: 14px;
         color: #212121;
-        font-weight: 600
+        font-weight: bold
     }
     .commentN {
         color: #212121;
         font-size: 14px;
-        font-weight: 600
+        font-weight: bold
     }
     .author {
         box-sizing: border-box;
@@ -469,7 +472,7 @@
         box-shadow: 0 -1px 2px 0 rgba(204, 204, 204, 0.30);
         position: fixed;
         bottom: 0;
-        padding: 0 0 0 .4rem;
+        /* padding: 0 0 0 .4rem; */
         display: flex;
         background: white;
     }
@@ -478,7 +481,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-right: .3rem;
+        padding:0 .3rem;
     }
     .footerRight {
         flex: 0 0 65%;
@@ -495,8 +498,8 @@
         justify-content: center;
     }
     .footerOne img {
-        width: .533333rem;
-        height: .506667rem;
+        width: .56rem;
+        height: .56rem;
         margin-bottom: .05rem;
     }
     .footerTwo img {

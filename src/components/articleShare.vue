@@ -63,7 +63,7 @@
                 author: '',
                 content: '',
                 thu_image: '',
-                shareDesc:''
+                shareDesc: ''
             }
         },
         created() {
@@ -172,6 +172,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    .articleShare {
+        height: inherit;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
     .articleTitle {
         font-size: 24px;
         color: #212121;

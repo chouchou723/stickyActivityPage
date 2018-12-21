@@ -1,12 +1,11 @@
 export default (fn, delay = 100) => {
     let now, lastExec, timer, context, args
-  
     function execute() {
       fn.apply(context, args)
       lastExec = now
     }
-  
-    return () => {
+    
+    return function() {
       context = this
       args = arguments
   

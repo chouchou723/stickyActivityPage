@@ -1,5 +1,5 @@
 <template>
-    <div class="ticketShare" id="ticketShare">
+    <div class="ticketShare" id="ticketShare" ref="groups" @scroll="handleScroll">
         <headerS></headerS>
         <!-- <div style="width:100%;height:.6rem;background:#F2F2F2"></div> -->
         <div class="ticketBG" :style='`background:url(${backgroundbg})  no-repeat top/cover`'>
@@ -28,22 +28,22 @@
             </div>
         </div>
         <!-- <div class="productTitle">
-                                                                        <div class="ticketI" @click="goto('#intro')"><span :class="isAct==='#intro'?'ticketAct':''">简介</span></div>
-                                                                        <div class="ticketI" @click="goto('#comment')"><span :class="isAct==='#comment'?'ticketAct':''">点评</span></div>
-                                                                        <div class="ticketI" @click="goto('#actvity')"><span :class="isAct==='#actvity'?'ticketAct':''">活动须知</span></div>
-                                                                    </div> -->
+                                                                                            <div class="ticketI" @click="goto('#intro')"><span :class="isAct==='#intro'?'ticketAct':''">简介</span></div>
+                                                                                            <div class="ticketI" @click="goto('#comment')"><span :class="isAct==='#comment'?'ticketAct':''">点评</span></div>
+                                                                                            <div class="ticketI" @click="goto('#actvity')"><span :class="isAct==='#actvity'?'ticketAct':''">活动须知</span></div>
+                                                                                        </div> -->
         <div v-sticky="{ zIndex: 100, stickyTop: stickyTop}" class="sss">
             <div class="productTitle">
-                <div class="ticketI" @click="goto('#intro')"><span id="ii">简介</span></div>
-                <div class="ticketI" @click="goto('#comment')"><span id="cc">点评</span></div>
-                <div class="ticketI" @click="goto('#actvity')"><span id="aa">活动须知</span></div>
+                <div class="ticketI" @click="goto('intro')"><span :class="activeIndex === 0?'ticketAct':''">简介</span></div>
+                <div class="ticketI" @click="goto('comment')"><span :class="activeIndex === 1?'ticketAct':''">点评</span></div>
+                <div class="ticketI" @click="goto('actvity')"><span :class="activeIndex === 2?'ticketAct':''">活动须知</span></div>
             </div>
         </div>
-        <div :class="['ticketIntro',isAll?'ticketAll':'ticketIntroMore']" id="intro">
+        <div :class="['ticketIntro',isAll?'ticketAll':'ticketIntroMore']" ref="intro">
             <div class="allIntro" v-html="ticketIntroContent"></div>
             <div class="seeMore" @click='seeMoreC' v-if="!isAll">查看全部简介 <img src="../assets/seemore.png" alt="" class="seeIcon"></div>
         </div>
-        <div class="author" id="comment">
+        <div class="author" ref="comment">
             <div class="productI">
                 <div class="authorLeft">
                     <div class="commentT">点评</div>
@@ -79,7 +79,7 @@
                 暂无点评
             </div>
         </div>
-        <div class="author" id="actvity">
+        <div class="author" ref="actvity">
             <div class="productI">
                 <div class="authorLeft">
                     <div class="commentT">活动须知</div>
@@ -87,10 +87,10 @@
             </div>
             <div class="noticeComent" v-html="noticeList" v-if="noticeList"></div>
             <!-- <ul class="noticeComent" v-if="noticeList.length!==0">
-                    <li class="singleNotice" v-for="(notice,index) in noticeList" :key="'not'+index">
-                        <div>{{notice}}</div>
-                    </li>
-                </ul> -->
+                                        <li class="singleNotice" v-for="(notice,index) in noticeList" :key="'not'+index">
+                                            <div>{{notice}}</div>
+                                        </li>
+                                    </ul> -->
             <div class="noComment" v-if="!noticeList">
                 暂无活动须知
             </div>
@@ -145,11 +145,22 @@
 <script>
     import wx from 'weixin-js-sdk';
     import VueSticky from './stickS/index.js'
+    import throttle from './stickS/throttle.js'
     import headerS from './header'
     import {
         getTicket,
         getWx
     } from '../api/api'
+    // const throttle = function(delay, action) {
+    //     var last = 0;
+    //     return function() {
+    //         var curr = +new Date()
+    //         if (curr - last > delay) {
+    //             action.apply(this, arguments)
+    //             last = curr
+    //         }
+    //     }
+    // }
     export default {
         components: {
             headerS
@@ -192,7 +203,10 @@
                 }],
                 noticeList: '',
                 isAll: false,
-                shareDesc: ''
+                shareDesc: '',
+                box: '',
+                activeIndex: 0,
+                scrollTopDelimiters: []
             }
         },
         created() {
@@ -203,10 +217,41 @@
             this.wechatConfig()
         },
         mounted() {
-            this.changeAct();
-            // window.addEventListener('scroll', this.changeAct, true)
+            this.calculateScrollTopDelimiters()
+        },
+        updated() {
+            this.calculateScrollTopDelimiters()
         },
         methods: {
+            handleScroll: throttle(function(e) {
+                const $groups = this.$refs.groups;
+                const basicH = 1.6 * this.basic + 1.15 * this.basic;
+                const scrollTop = $groups.scrollTop + basicH;
+                const lowerBound = this.scrollTopDelimiters[0];
+                const upperBound = this.scrollTopDelimiters[1];
+                const bottomBound = this.scrollTopDelimiters[2];
+                const activeIndex = (() => {
+                    if (scrollTop < lowerBound) {
+                        return 0
+                    } else if(lowerBound <= scrollTop && scrollTop < upperBound){
+                        return 1
+                    } else if(upperBound <= scrollTop &&scrollTop < bottomBound){
+                        return 2
+                    }else{
+                        return 3
+                    }
+                    
+                })();
+                this.activeIndex = activeIndex;
+            }),
+            calculateScrollTopDelimiters() {
+                this.scrollTopDelimiters = [];
+                let br = this.$refs.comment.offsetTop-50;
+                let cr = this.$refs.actvity.offsetTop-50;
+                let dr = cr + this.$refs.actvity.offsetHeight;
+                this.scrollTopDelimiters = [br, cr, dr];
+                // console.log(1,this.scrollTopDelimiters)
+            },
             fetchData() {
                 let dl = document.location.href.split('/')
                 let id = dl[dl.length - 1];
@@ -229,13 +274,6 @@
                     this.commentNumber = data.evaluationCount;
                     this.commentList = data.evaluations;
                     this.exhList = data.commendExhibitions;
-                    // this.shareDesc = data.shareDesc
-                    // this.authorImg = `${this.apiUrl}/attach/img/${data.author.avatarId}/square`
-                    // this.title = data.title;
-                    // this.author = data.author.nickname;
-                    // this.content = data.content;
-                    // this.time = data.momentCreatedDate;
-                    // this.thu_image = `${this.apiUrl}/attach/img/${data.coverId}`
                 })
             },
             changeDate(date) {
@@ -256,57 +294,57 @@
             seeMoreC() {
                 this.isAll = true;
             },
-            changeCss(el, type) {
-                let a = document.getElementById(el);
-                let ii = document.getElementById('ii');
-                let cc = document.getElementById('cc');
-                let aa = document.getElementById('aa');
-                if (type === 'else') {
-                    ii.className = ''
-                    cc.className = ''
-                    aa.className = ''
-                    return
-                }
-                if (a.className.indexOf('ticketAct') < 0) {
-                    ii.className = ''
-                    cc.className = ''
-                    aa.className = ''
-                    a.className += ' ticketAct'
-                }
-            },
-            changeAct() {
-                let basicH = 1.6 * this.basic + 1.15 * this.basic;
-                let ar = document.getElementById('intro').getBoundingClientRect();
-                let br = document.getElementById('comment').getBoundingClientRect();
-                let cr = document.getElementById('actvity').getBoundingClientRect();
-                let aT = ar.top;
-                let aB = ar.bottom;
-                let bT = br.top;
-                let bB = br.bottom;
-                let cT = cr.top;
-                let cB = cr.bottom;
-                if (aT > basicH || aB - basicH > 20) {
-                    this.changeCss('ii')
-                } else if (bT - basicH < 40 && bB - basicH > 20) {
-                    this.changeCss('cc')
-                } else if (cT - basicH < 40 && cB - basicH > 20) {
-                    this.changeCss('aa')
-                } else {
-                    this.changeCss('', 'else')
-                }
-            },
+            // changeCss(el, type) {
+            //     let a = document.getElementById(el);
+            //     let ii = document.getElementById('ii');
+            //     let cc = document.getElementById('cc');
+            //     let aa = document.getElementById('aa');
+            //     if (type === 'else') {
+            //         ii.className = ''
+            //         cc.className = ''
+            //         aa.className = ''
+            //         return
+            //     }
+            //     if (a.className.indexOf('ticketAct') < 0) {
+            //         ii.className = ''
+            //         cc.className = ''
+            //         aa.className = ''
+            //         a.className += ' ticketAct'
+            //     }
+            // },
+            // changeAct() {
+            //     let basicH = 1.6 * this.basic + 1.15 * this.basic;
+            //     let ar = document.getElementById('intro').getBoundingClientRect();
+            //     let br = document.getElementById('comment').getBoundingClientRect();
+            //     let cr = document.getElementById('actvity').getBoundingClientRect();
+            //     let aT = ar.top;
+            //     let aB = ar.bottom;
+            //     let bT = br.top;
+            //     let bB = br.bottom;
+            //     let cT = cr.top;
+            //     let cB = cr.bottom;
+            //     if (aT > basicH || aB - basicH > 20) {
+            //         this.changeCss('ii')
+            //     } else if (bT - basicH < 40 && bB - basicH > 20) {
+            //         this.changeCss('cc')
+            //     } else if (cT - basicH < 40 && cB - basicH > 20) {
+            //         this.changeCss('aa')
+            //     } else {
+            //         this.changeCss('', 'else')
+            //     }
+            // },
             goto(type) {
-                let a = document.querySelector(type).offsetTop;
+                let a = this.$refs[type].offsetTop;
                 let final = a - (1.6 * this.basic + 1.15 * this.basic);
                 // this.isAct = type;
                 this.smoothUp(final)
             },
             smoothUp(final) {
-                let now = document.documentElement.scrollTop || document.body.scrollTop;
+                let now = this.$refs.groups.scrollTop; //document.documentElement.scrollTop || document.body.scrollTop;
                 let speed = Math.floor((now - final) / 8);
                 if (now - final > 10 || final - now > 10) {
-                    document.body.scrollTop -= speed;
-                    document.documentElement.scrollTop -= speed;
+                    this.$refs.groups.scrollTop -= speed;
+                    // document.documentElement.scrollTop -= speed;
                     window.requestAnimationFrame(this.smoothUp.bind(this, final))
                 }
             },
@@ -408,6 +446,9 @@
 <style scoped>
     .ticketShare {
         background: #F2F2F2;
+        height: inherit;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
     }
     .ticketBG {
         height: 6.826667rem;
@@ -531,7 +572,7 @@
         margin-bottom: 0.1rem;
         /* position: relative; */
         /* position: sticky;
-                                                                    top: 1.6rem; */
+                                                                                        top: 1.6rem; */
         /* z-index: 100; */
     }
     .sss {

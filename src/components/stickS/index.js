@@ -68,50 +68,50 @@ export default {
       active = false
     }
 
-    let htmlFZ = document.getElementsByTagName("html")[0].style.fontSize;
-    let basic = htmlFZ.split('px')[0];
-    let basicH = 1.6 * basic + 1.15 * basic;
-    const changeCss = (el,type) =>{
-      let a = document.getElementById(el);
-      let ii = document.getElementById('ii');
-      let cc = document.getElementById('cc');
-      let aa = document.getElementById('aa');
-      if(type==='else'){
-        ii.className =''
-        cc.className =''
-        aa.className =''
-        return
-      }
-      if(a.className.indexOf('ticketAct')<0){
-        ii.className =''
-        cc.className =''
-        aa.className =''
-        a.className +=' ticketAct'
-      }
-    }
+    // let htmlFZ = document.getElementsByTagName("html")[0].style.fontSize;
+    // let basic = htmlFZ.split('px')[0];
+    // let basicH = 1.6 * basic + 1.15 * basic;
+    // const changeCss = (el,type) =>{
+    //   let a = document.getElementById(el);
+    //   let ii = document.getElementById('ii');
+    //   let cc = document.getElementById('cc');
+    //   let aa = document.getElementById('aa');
+    //   if(type==='else'){
+    //     ii.className =''
+    //     cc.className =''
+    //     aa.className =''
+    //     return
+    //   }
+    //   if(a.className.indexOf('ticketAct')<0){
+    //     ii.className =''
+    //     cc.className =''
+    //     aa.className =''
+    //     a.className +=' ticketAct'
+    //   }
+    // }
     listenAction = throttle(() => {
-      let ar = document.getElementById('intro').getBoundingClientRect();
-      let br = document.getElementById('comment').getBoundingClientRect();
-      let cr = document.getElementById('actvity').getBoundingClientRect();
+      // let ar = document.getElementById('intro').getBoundingClientRect();
+      // let br = document.getElementById('comment').getBoundingClientRect();
+      // let cr = document.getElementById('actvity').getBoundingClientRect();
 
-      let aT = ar.top;
-      let aB = ar.bottom;
+      // let aT = ar.top;
+      // let aB = ar.bottom;
 
-      let bT = br.top;
-      let bB = br.bottom;
+      // let bT = br.top;
+      // let bB = br.bottom;
 
-      let cT = cr.top;
-      let cB = cr.bottom;
+      // let cT = cr.top;
+      // let cB = cr.bottom;
       
-      if(aT>basicH||aB-basicH>20){
-        changeCss('ii')
-      }else if(bT-basicH<40&&bB-basicH>20){
-        changeCss('cc')
-      }else if(cT-basicH<40&&cB-basicH>20){
-        changeCss('aa')        
-      }else{
-        changeCss('','else') 
-      }
+      // if(aT>basicH||aB-basicH>20){
+      //   changeCss('ii')
+      // }else if(bT-basicH<40&&bB-basicH>20){
+      //   changeCss('cc')
+      // }else if(cT-basicH<40&&cB-basicH>20){
+      //   changeCss('aa')        
+      // }else{
+      //   changeCss('','else') 
+      // }
 
       const offsetTop = el.getBoundingClientRect().top
       if (offsetTop <= stickyTop) {//当前距离视图顶部的距离 小于等于设定的sticky距离时
