@@ -14,7 +14,7 @@
                         </div>
                     </div>
                 </div> -->
-        <headerS></headerS>
+        <!-- <headerS></headerS> -->
         <div style="width:100%;height:1.6rem;background:#F2F2F2"></div>
         <swiper :options="swiperOption" class="swiperOption">
             <swiper-slide class="slide-1" v-for="(item,index) in pics" :key="index">
@@ -97,7 +97,8 @@
             <div class="content" v-html="content">
             </div>
         </div>
-        <div class="footer">
+         <!-- <div class="lastSection"></div> -->
+        <!-- <div class="footer">
             <div class="footerLeft">
                 <div class="footerOne" @click="clickDownload">
                     <img src="../assets/customer.png" alt="">
@@ -116,7 +117,7 @@
                     立即购买
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- <img src="../assets/cc.jpg" alt=""> -->
     </div>
 </template>
@@ -124,7 +125,7 @@
 <script>
     import wx from 'weixin-js-sdk';
     import 'swiper/dist/css/swiper.css'
-    import headerS from './header'
+    // import headerS from './header'
     import {
         getProduct,
         getWx
@@ -137,7 +138,7 @@
         components: {
             swiper,
             swiperSlide,
-            headerS
+            // headerS
         },
         data() {
             return {
@@ -234,7 +235,7 @@
                 }).then((response) => {
                     // this.$wechat.config(JSON.parse(response.data.data))
                     //api调接口之后配置
-                    let data = response.data;
+                    let data = response;
                     wx.config({
                         debug: false,
                         appId: data.appId, // 必填，公众号的唯一标识
@@ -246,13 +247,15 @@
                         ] // 必填，需要使用的JS接口列表
                     });
                     let _this = this;
+                    let loc =  window.location
+                    let shareUrl = loc.origin+loc.pathname+loc.hash
                     wx.ready(function() {
                         //              alert(window.location.href.split('#')[0]);
                         //分享到朋友/qq
                         wx.updateAppMessageShareData({
                             title: _this.title, // 分享标题
                             desc: document.getElementsByClassName('content')[0].textContent || _this.title, // 分享描述
-                            link: window.location.href.split('#')[0], // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                            link: shareUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                             imgUrl: _this.pics[0].src, // 分享图标
                             success: function(res) {
                                 // 用户确认分享后执行的回调函数
@@ -267,7 +270,7 @@
                         //分享给朋友圈 空间
                         wx.updateTimelineShareData({
                             title: _this.title, // 分享标题
-                            link: window.location.href.split('#')[0], // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                            link: shareUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                             imgUrl: _this.pics[0].src, // 分享图标
                             success: function(res) {
                                 // 用户确认分享后执行的回调函数
@@ -466,13 +469,12 @@
         border-right: 1px solid #757575;
         transform: rotate(45deg);
     }
-    .footer {
+    /* .footer {
         width: 100%;
         height: 1.306667rem;
         box-shadow: 0 -1px 2px 0 rgba(204, 204, 204, 0.30);
         position: fixed;
         bottom: 0;
-        /* padding: 0 0 0 .4rem; */
         display: flex;
         background: white;
     }
@@ -532,13 +534,18 @@
         display: flex;
         align-items: center;
         justify-content: center;
-    }
+    } */
     .content {
         font-size: 14px;
         margin-bottom: 1.6rem;
         margin-top: .1rem;
     }
-    .content img {
+    .content img, .content video {
         max-width: 100%;
     }
+     /* .lastSection {
+        width: 100%;
+        height: 1.4rem;
+        background: #F2F2F2
+    } */
 </style>

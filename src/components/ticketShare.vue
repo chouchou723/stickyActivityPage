@@ -1,6 +1,6 @@
 <template>
     <div class="ticketShare" id="ticketShare" ref="groups" @scroll="handleScroll">
-        <headerS></headerS>
+        <!-- <headerS></headerS> -->
         <!-- <div style="width:100%;height:.6rem;background:#F2F2F2"></div> -->
         <div class="ticketBG" :style='`background:url(${backgroundbg})  no-repeat top/cover`'>
             <div class="ticketContent">
@@ -122,7 +122,7 @@
             </div>
         </div>
         <div class="lastSection"></div>
-        <div class="footer">
+        <!-- <div class="footer">
             <div class="footerLeft">
                 <div class="footerOne" @click="clickDownload">
                     <img src="../assets/service.png" alt="">
@@ -137,7 +137,7 @@
                     立即购买
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- <img src="../assets/cc.jpg" alt=""> -->
     </div>
 </template>
@@ -146,7 +146,7 @@
     import wx from 'weixin-js-sdk';
     import VueSticky from './stickS/index.js'
     import throttle from './stickS/throttle.js'
-    import headerS from './header'
+    // import headerS from './header'
     import {
         getTicket,
         getWx
@@ -163,7 +163,7 @@
     // }
     export default {
         components: {
-            headerS
+            // headerS
         },
         directives: {
             'sticky': VueSticky,
@@ -377,7 +377,7 @@
                 }).then((response) => {
                     // this.$wechat.config(JSON.parse(response.data.data))
                     //api调接口之后配置
-                    let data = response.data;
+                    let data = response;
                     wx.config({
                         debug: false,
                         appId: data.appId, // 必填，公众号的唯一标识
@@ -389,13 +389,15 @@
                         ] // 必填，需要使用的JS接口列表
                     });
                     let _this = this;
+                     let loc =  window.location
+                    let shareUrl = loc.origin+loc.pathname+loc.hash
                     wx.ready(function() {
                         //              alert(window.location.href.split('#')[0]);
                         //分享到朋友/qq
                         wx.updateAppMessageShareData({
                             title: _this.ticketInfo.title, // 分享标题
                             desc: document.getElementsByClassName('content')[0].textContent || _this.title, // 分享描述
-                            link: window.location.href.split('#')[0], // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                            link: shareUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                             imgUrl: _this.backgroundbg, // 分享图标
                             success: function(res) {
                                 // 用户确认分享后执行的回调函数
@@ -410,7 +412,7 @@
                         //分享给朋友圈 空间
                         wx.updateTimelineShareData({
                             title: _this.ticketInfo.title, // 分享标题
-                            link: window.location.href.split('#')[0], // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                            link: shareUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                             imgUrl: _this.backgroundbg, // 分享图标
                             type: '', // 分享类型,music、video或link，不填默认为link
                             dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
@@ -613,7 +615,7 @@
         position: relative;
         overflow: hidden;
     }
-    .allIntro img {
+    .allIntro img, .allIntro video {
         max-width: 100%;
     }
     .ticketAll {
@@ -770,7 +772,7 @@
         margin-left: .2rem;
         width: .48rem;
     }
-    .footer {
+    /* .footer {
         width: 100%;
         height: 1.6rem;
         box-shadow: 0 -1px 2px 0 rgba(204, 204, 204, 0.30);
@@ -834,7 +836,7 @@
         align-items: center;
         justify-content: center;
         border-radius: 3px;
-    }
+    } */
     .lastSection {
         width: 100%;
         height: 1.4rem;

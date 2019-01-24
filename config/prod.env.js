@@ -12,7 +12,7 @@ if (target == 'online') {
   var obj = {
     NODE_ENV: "'test'",
     //post用当前域名
-    API_ROOT: "'http://web.test.artreedu.com'"
+    API_ROOT: "''"
   }
 }
 module.exports = obj;

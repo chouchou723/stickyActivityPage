@@ -1,6 +1,6 @@
 <template>
     <div class="articleShare">
-        <headerS></headerS>
+        <!-- <headerS></headerS> -->
         <div style="width:100%;height:1.6rem;background:#F2F2F2"></div>
         <div class="articleTitle">{{title}}</div>
         <div class="author">
@@ -19,7 +19,8 @@
         </div>
         <div class="content" v-html="content">
         </div>
-        <div class="footer">
+        <!-- <div class="lastSection"></div> -->
+        <!-- <div class="footer">
             <div class="footerLeft">
                 <div class="footerOne" @click="clickDownload">
                     <img src="../assets/good.png" alt="">
@@ -39,21 +40,21 @@
                     我喜欢
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- <img src="../assets/cc.jpg" alt=""> -->
     </div>
 </template>
 
 <script>
     import wx from 'weixin-js-sdk';
-    import headerS from './header';
+    // import headerS from './header';
     import {
         getArticle,
         getWx
     } from '../api/api'
     export default {
         components: {
-            headerS
+            // headerS
         },
         data() {
             return {
@@ -116,8 +117,8 @@
                 }).then((response) => {
                     // this.$wechat.config(JSON.parse(response.data.data))
                     //api调接口之后配置
-                    let data = response.data;
-                    console.log(data)
+                    let data = response;
+                    // console.log(data)
                     wx.config({
                         debug: false,
                         appId: data.appId, // 必填，公众号的唯一标识
@@ -129,13 +130,15 @@
                         ] // 必填，需要使用的JS接口列表
                     });
                     let _this = this;
+                     let loc =  window.location
+                    let shareUrl = loc.origin+loc.pathname+loc.hash
                     wx.ready(function() {
                         //              alert(window.location.href.split('#')[0]);
                         //分享到朋友/qq
                         wx.updateAppMessageShareData({
                             title: _this.title, // 分享标题
                             desc: document.getElementsByClassName('content')[0].textContent || _this.title, // 分享描述
-                            link: window.location.href.split('#')[0], // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                            link: shareUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                             imgUrl: _this.thu_image, // 分享图标
                             success: function(res) {
                                 // 用户确认分享后执行的回调函数
@@ -150,7 +153,7 @@
                         //分享给朋友圈 空间
                         wx.updateTimelineShareData({
                             title: _this.title, // 分享标题
-                            link: window.location.href.split('#')[0], // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                            link: shareUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                             imgUrl: _this.thu_image, // 分享图标
                             success: function(res) {
                                 // 用户确认分享后执行的回调函数
@@ -220,7 +223,7 @@
         color: #573426;
         border-radius: 2px;
     }
-    .footer {
+    /* .footer {
         width: 100%;
         height: 1.6rem;
         box-shadow: 0 -1px 2px 0 rgba(204, 204, 204, 0.30);
@@ -254,19 +257,13 @@
         height: 60%;
     }
     .footerOne img {
-        /* width: .506667rem; */
         height: .44rem;
-        /* margin-bottom: .15rem; */
     }
     .footerTwo img {
-        /* width: .5rem; */
         height: .48rem;
-        /* margin-bottom: .15rem; */
     }
     .footerThree img {
-        /* width: .48rem; */
         height: .48rem;
-        /* margin-bottom: .15rem; */
     }
     .footerOne div,
     .footerTwo div,
@@ -282,14 +279,19 @@
         padding: 0.25rem 0;
         background: #FFCA18;
         border-radius: 3px;
-    }
+    } */
     .content {
         padding: 0 .4rem;
         font-size: 14px;
         margin-bottom: 1.8rem;
         line-height: 20px;
     }
-    .content img {
+    .content img , .content video{
         max-width: 100%;
+    }
+     .lastSection {
+        width: 100%;
+        height: 1.4rem;
+        background: white;
     }
 </style>
