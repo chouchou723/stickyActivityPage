@@ -239,7 +239,7 @@
                     wx.config({
                         debug: false,
                         appId: data.appId, // 必填，公众号的唯一标识
-                        timestamp: data.timestamp, // 必填，生成签名的时间戳
+                        timestamp: parseInt(data.timestamp), // 必填，生成签名的时间戳
                         nonceStr: data.nonceStr, // 必填，生成签名的随机串
                         signature: data.signature, // 必填，微信签名
                         jsApiList: [
